@@ -107,7 +107,7 @@ import allproducts from "./assets/products.json";
         <div class="p-5 border mb-4 bg-light rounded-3">
           <div class="container-fluid py-5">
             <h1 v-if="cart.items.length" class="display-5 fw-bold text-center">
-              Your Cart <i class="fa-brands fa-opencart"></i>
+              Your Cart 🛍️
             </h1>
             <h1 v-else class="display-5 fw-bold text-center">
               Your Cart is Empty 🛒
