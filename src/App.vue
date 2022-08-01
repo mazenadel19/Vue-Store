@@ -1,47 +1,18 @@
 <script setup>
 import allproducts from "./assets/products.json";
+import HeaderComponent from "./components/header-component.vue";
+import CartComponent from "./components/cart-component.vue";
+import ProductsComponent from "./components/products-component.vue";
 </script>
 
 <template>
-  <!-- Start Banner -->
-  <header class="bg-dark">
-    <div class="container">
-      <div class="row">
-        <div
-          class="col-md-12 text-light d-flex justify-content-between align-items-baseline p-3"
-        >
-          <a
-            href="#"
-            class="text-warning text-decoration-none h4"
-            @click.prevent="hideCart"
-            >Vue Store</a
-          >
-          <div class="d-flex align-items-baseline">
-            <button
-              class="btn btn-primary ms-3"
-              @click="showCart"
-              :title="
-                cart.items.length +
-                ` item${
-                  cart.items.length !== 1 ? 's' : ''
-                } in your chart with total price ` +
-                currency(compCartTotal)
-              "
-            >
-              show chart
-              <span
-                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-              >
-                {{ cart.items.length }}
-                <span class="visually-hidden">number of items in cart</span>
-              </span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </header>
-  <!-- End Banner -->
+  <HeaderComponent
+    :cart="cart"
+    :compCartTotal="compCartTotal"
+    @hideCart="hideCart"
+    @showCart="showCart"
+    :currency="currency"
+  />
 
   <div class="container">
     <!-- Start Products -->
@@ -49,132 +20,27 @@ import allproducts from "./assets/products.json";
       v-if="!cart.isCartVisisble"
       class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4 mt-1"
     >
-      <div class="col" v-for="product in products" :key="product.id">
-        <div class="card h-100">
-          <img :src="product.image" class="card-img-top" :alt="product.name" />
-          <div class="card-body mh-160 text-center">
-            <h5 class="card-title fw-bold" :title="product.name">
-              {{ shortifyText(product.name, 4) }}
-            </h5>
-            <p class="card-text mt-4">
-              {{ shortifyText(product.description, 11) }}
-            </p>
-          </div>
-          <div class="card-footer d-flex flex-column">
-            <div class="row">
-              <p class="badge text-dark d-flex center col">
-                InStock:
-                <span
-                  class="font_20"
-                  :class="[
-                    product.instock <= 25 ? 'instock_none' : '',
-                    product.instock <= 65 && product.instock > 25
-                      ? 'instock_less'
-                      : '',
-                    product.instock > 65 ? 'instock_more' : '',
-                  ]"
-                  >{{ product.instock }}</span
-                >
-              </p>
-              <p class="col center">
-                Price:<span class="font_20">
-                  {{ currency(product.price) }}</span
-                >
-              </p>
-            </div>
-            <div class="row">
-              <p class="col center">
-                Rating: <span class="font_20">{{ product.rate }}</span>
-              </p>
-              <button
-                class="col btn btn-success btn-sm"
-                :disabled="product.instock === 0"
-                @click="addToCart(product)"
-              >
-                Add To Cart
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
+      <ProductsComponent
+        :products="products"
+        :shortifyText="shortifyText"
+        :currency="currency"
+        :addToCart="addToCart"
+      />
     </div>
     <!-- End Products -->
 
     <!-- Start Cart -->
     <div class="row" v-else-if="cart.isCartVisisble">
-      <!-- Start Header -->
-      <div class="col-12">
-        <div class="p-5 border mb-4 bg-light rounded-3">
-          <div class="container-fluid py-5">
-            <h1 v-if="cart.items.length" class="display-5 fw-bold text-center">
-              Your Cart 🛍️
-            </h1>
-            <h1 v-else class="display-5 fw-bold text-center">
-              Your Cart is Empty 🛒
-            </h1>
-          </div>
-        </div>
-      </div>
-      <!-- End Header -->
-
-      <!-- Start Cart Products -->
-      <div class="container" v-if="cart.items.length">
-        <div class="row">
-          <div class="col-12 table-responsive">
-            <table class="table table-striped text-center table align-middle">
-              <thead>
-                <tr>
-                  <th scope="col">Product Name</th>
-                  <th scope="col">Product Quantity</th>
-                  <th scope="col">Product Price</th>
-                  <th scope="col">Product Total Price</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="item in cart.items" :key="item.id">
-                  <td>{{ item.name }}</td>
-                  <td>{{ item.quantity }}</td>
-                  <td>{{ currency(item.price) }}</td>
-                  <th>{{ currency(item.price * item.quantity) }}</th>
-                  <td>
-                    <button
-                      class="col btn btn-danger btn-sm"
-                      @click="removeFromCart(item.id)"
-                    >
-                      -
-                    </button>
-                  </td>
-                  <td>
-                    <button
-                      class="col btn btn-success btn-sm"
-                      :disabled="validator(item.id)"
-                      @click="addToCart(item)"
-                    >
-                      +
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <th colspan="3" class="text-end">Price</th>
-                  <th colspan="1">{{ currency(compCartTotal) }}</th>
-                  <td colspan="2"></td>
-                </tr>
-                <tr>
-                  <th colspan="3" class="text-end">Taxes</th>
-                  <th colspan="1">{{ currency(compTaxes) }}</th>
-                  <td colspan="2"></td>
-                </tr>
-                <tr>
-                  <th colspan="3" class="text-end">Total</th>
-                  <th colspan="1">{{ currency(compFinalPrice) }}</th>
-                  <td colspan="2"></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-      <!-- End Cart Products-->
+      <CartComponent
+        :cart="cart"
+        :compTaxes="compTaxes"
+        :compFinalPrice="compFinalPrice"
+        :compCartTotal="compCartTotal"
+        :currency="currency"
+        :addToCart="addToCart"
+        :removeFromCart="removeFromCart"
+        :validator="validator"
+      />
     </div>
     <!-- End Cart -->
   </div>
@@ -204,12 +70,14 @@ export default {
     },
     compFinalPrice: function () {
       return this.compTaxes + this.compCartTotal;
-    }
+    },
   },
   methods: {
-    validator:function (id){
-     const selectedProduct=  this.products.find(product=>product.id===id)
-     return selectedProduct.instock ===0
+    validator: function (id) {
+      const selectedProduct = this.products.find(
+        (product) => product.id === id
+      );
+      return selectedProduct.instock === 0;
     },
     shortifyText: (text, num) => {
       const splitText = text.split(" ");
