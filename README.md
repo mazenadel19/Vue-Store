@@ -1,6 +1,6 @@
 # Vue Store
 
-Crud app, practicing Data, Computed & Methods
+Crud app, practicing Data, Computed, Methods, Props & Components
 
 ## 🚀 Getting Started
 
@@ -13,3 +13,4 @@ Crud app, practicing Data, Computed & Methods
 ## 🧰 Tools I've used
 
 - Bootstrap (UI Library)
+- Axios - VueAxios

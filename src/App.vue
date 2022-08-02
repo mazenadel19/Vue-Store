@@ -1,4 +1,5 @@
 <script setup>
+import allproducts from "./assets/products.json";
 import HeaderComponent from "./components/header-component.vue";
 import CartComponent from "./components/cart-component.vue";
 import ProductsComponent from "./components/products-component.vue";
@@ -50,7 +51,8 @@ export default {
   mounted() {
     this.axios
       .get("https://my-projects-apis.herokuapp.com/VueStore")
-      .then((res) => (this.products = res.data));
+      .then((res) => (this.products = res.data))
+      .catch((err) => console.log(err.message), (this.products = allproducts));
   },
   data() {
     return {
