@@ -50,7 +50,7 @@ import ProductsComponent from "./components/products-component.vue";
 export default {
   mounted() {
     this.axios
-      .get("https://my-projects-apis.herokuapp.com/VueStore")
+      .get("https://everlasting-pond-sunday.glitch.me/VueStore")
       .then((res) => (this.products = res.data))
       .catch((err) => console.log(err.message), (this.products = allproducts));
   },
